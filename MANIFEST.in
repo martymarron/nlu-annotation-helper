@@ -1,0 +1,9 @@
+include tox.ini
+
+graft tests
+graft src
+
+global-exclude *.py[co]
+
+prune dist
+prune venv

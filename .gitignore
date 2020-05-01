@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+build/
+dist/
+fud/
+pyvenv.cfg
+venv/
+*.json
+
+__pycache__/
+*.egg-info/
