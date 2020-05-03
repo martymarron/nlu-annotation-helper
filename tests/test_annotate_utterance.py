@@ -1,10 +1,25 @@
 # -*- coding: utf-8 -*-
 
-from pytest import raises
+from pytest import raises, fixture
 from nlu_annotation_helper.annotate_utterance import *
 
 
-def test_detect_lang_ja():
+@fixture(scope="function")
+def annotate_utterance():
+    yield
+    AnnotateUtterance.lang = None
+
+
+def test_detect_lang_ja(annotate_utterance):
+    expected = "ja"
+    actual = AnnotateUtterance.detect_lang("次の曲にして")
+
+    assert actual == expected
+
+
+def test_detect_lang_ja_set_lang(annotate_utterance):
+    AnnotateUtterance.lang = "ja"
+
     expected = "ja"
     actual = AnnotateUtterance.detect_lang("次")
 
@@ -12,6 +27,15 @@ def test_detect_lang_ja():
 
 
 def test_detect_lang_en():
+    expected = "en"
+    actual = AnnotateUtterance.detect_lang("go to next song")
+
+    assert actual == expected
+
+
+def test_detect_lang_en_set_lang():
+    AnnotateUtterance.lang = "en"
+
     expected = "en"
     actual = AnnotateUtterance.detect_lang("next")
 
@@ -27,8 +51,15 @@ def test_get_instance():
     assert actual == expected
 
 
-def test_annotate_en():
+def test_annotate_en_no_set_lang():
     annotate_uttr = AnnotateUtterance.get_instance()
+
+    with raises(LanguageNotSupportedError):
+        annotate_uttr.annotate("Hello", {})
+
+
+def test_annotate_en_set_lang():
+    annotate_uttr = AnnotateUtterance.get_instance(lang="en")
 
     with raises(LanguageNotSupportedError):
         annotate_uttr.annotate("Hello", {})

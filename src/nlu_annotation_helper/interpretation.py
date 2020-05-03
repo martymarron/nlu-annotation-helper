@@ -21,6 +21,11 @@ class Interpretation:
         self.slotValues = slot_values
         self.slots = []
 
+        self.lang = None
+
+    def set_lang(self, lang: str = None):
+        self.lang = lang
+
     def get_annotated_utterance(self):
         if self.intent in ["PhaticIntent"]:
             return self.utterance.replace(" ", ""), []
@@ -28,5 +33,5 @@ class Interpretation:
             return self.__annotate()
 
     def __annotate(self):
-        annotate_uttr = AnnotateUtterance.get_instance()
+        annotate_uttr = AnnotateUtterance.get_instance(lang=self.lang)
         return annotate_uttr.annotate(uttr=self.utterance, slot_values=self.slotValues)

@@ -13,6 +13,7 @@ def test_get_annotated_utterance_with_labeled_tokens_only():
         "Appliance": "テレビ"
     }
     interp = Interpretation(domain, intent, utterance, slot_values)
+    interp.set_lang("ja")
 
     expected = ("{テレビ|DeviceType}{消して|ActionTrigger}", ["DeviceType", "ActionTrigger"])
     actual = interp.get_annotated_utterance()
@@ -30,6 +31,7 @@ def test_get_annotated_utterance_with_non_labaled_token():
         "Appliance": "テレビ"
     }
     interp = Interpretation(domain, intent, utterance, slot_values)
+    interp.set_lang("ja")
 
     expected = ("{テレビ|DeviceType}を{消して|ActionTrigger}", ["DeviceType", "ActionTrigger"])
     actual = interp.get_annotated_utterance()
@@ -43,6 +45,7 @@ def test_get_annotated_utterance_with_non_labeled_token_only():
     utterance = "止め て"
     slot_values = {}
     interp = Interpretation(domain, intent, utterance, slot_values)
+    interp.set_lang("ja")
 
     expected = ("止めて", [])
     actual = interp.get_annotated_utterance()
@@ -56,6 +59,7 @@ def test_get_annotated_utterance_with_non_labeled_one_character_token():
     utterance = "次"
     slot_values = {}
     interp = Interpretation(domain, intent, utterance, slot_values)
+    interp.set_lang("ja")
 
     expected = ("次", [])
     actual = interp.get_annotated_utterance()
@@ -69,6 +73,7 @@ def test_get_annotated_utteranc_with_phaticintent():
     utterance = "お やすみ"
     slot_values = {"Greeting": "おやすみ"}
     interp = Interpretation(domain, intent, utterance, slot_values)
+    interp.set_lang("ja")
 
     expected = ("おやすみ", [])
     actual = interp.get_annotated_utterance()

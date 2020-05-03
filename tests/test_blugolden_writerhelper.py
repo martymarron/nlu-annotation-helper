@@ -25,6 +25,7 @@ def test_create_blugolden_file_path():
 
 def test_build_utterance_entry():
     interp = Interpretation("HomeAutomation", "TurnOnApplianceIntent", "テレビつけて", {"ActionTrigger":"つけて", "DeviceType":"テレビ"})
+    interp.set_lang("ja")
 
     expected = [
         "HomeAutomation",

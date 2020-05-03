@@ -16,15 +16,19 @@ class AnnotateUtterance:
         Formatter("%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s"))
     _logger.addHandler(_stream_handler)
 
+    lang: str = None
     singleton_instance = None
 
     def __init__(self):
         self._next: AnnotateUtterance = None
 
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls, lang: str = None):
         if cls.singleton_instance is None:
             cls.singleton_instance = cls.__initialize()
+
+        if lang:
+            cls.lang = lang
 
         return cls.singleton_instance
 
@@ -45,7 +49,11 @@ class AnnotateUtterance:
 
     @staticmethod
     def detect_lang(text: str) -> str:
-        return detect(text)
+        if AnnotateUtterance.lang:
+            detect_lang = AnnotateUtterance.lang
+        else:
+            detect_lang = detect(text)
+        return detect_lang
 
     def set_next(self, instance):
         self._next: AnnotateUtterance = instance

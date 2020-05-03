@@ -18,7 +18,7 @@ stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 
 
-def load_uttr_json(path) -> list:
+def load_uttr_json(path, lang) -> list:
 
     interp_list = []
     try:
@@ -42,6 +42,8 @@ def load_uttr_json(path) -> list:
 
                 logger.info("load: %s, %s, %s, %s", domain, intent, utterance, slot_values)
                 interp = Interpretation(domain, intent, utterance, slot_values)
+                if lang:
+                    interp.set_lang(lang)
                 interp_list.append(interp)
 
     except IOError:
@@ -71,10 +73,11 @@ def save_blugoldens(interp_list: list):
 
 def main():
     parser = ArgumentParser()
-    parser.add_argument("json_path", help="Provide file path for input json")
+    parser.add_argument("--json", help="Provide path to input json.", required=True)
+    parser.add_argument("--lang", help="Instruct language to interpret input json. e.g. ja, es, ...etc.")
     args = parser.parse_args()
 
-    interp_list = load_uttr_json(args.json_path)
+    interp_list = load_uttr_json(args.json, args.lang)
     save_blugoldens(interp_list)
 
 
