@@ -3,6 +3,7 @@
 build/
 dist/
 fud/
+test-results/
 pyvenv.cfg
 venv/
 *.json

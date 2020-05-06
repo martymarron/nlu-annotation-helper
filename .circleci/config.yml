@@ -1,0 +1,32 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@0.2.1
+  slack: circleci/slack@3.4.2
+
+jobs:
+  build-and-test:
+    executor: python/default
+    steps:
+      - checkout
+      - run:
+          command: pip install -e .[dev]
+          name: Install
+      - run:
+          command: pytest --junitxml=test-results/output.xml tests/
+          name: Test
+      - store_test_results:
+          path: test-results
+      - run:
+          command: python setup.py sdist
+          name: Build
+      - store_artifacts:
+          path: dist
+      - slack/status:
+          channel: test
+
+
+workflows:
+  main:
+    jobs:
+      - build-and-test
