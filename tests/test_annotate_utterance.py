@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from pytest import raises, fixture
+from pytest import raises, fixture, mark
 from nlu_annotation_helper.annotate_utterance import *
 
 
@@ -10,34 +10,29 @@ def annotate_utterance():
     AnnotateUtterance.lang = None
 
 
-def test_detect_lang_ja(annotate_utterance):
-    expected = "ja"
-    actual = AnnotateUtterance.detect_lang("次の曲にして")
+@mark.parametrize("lang, text", [
+    ("ja", "テレビを消して"),
+    ("en", "go to next song")
+])
+@mark.usefixtures("annotate_utterance")
+def test_detect_lang_no_set_lang(lang, text):
+    expected = lang
+    actual = AnnotateUtterance.detect_lang(text=text)
 
     assert actual == expected
 
 
-def test_detect_lang_ja_set_lang(annotate_utterance):
-    AnnotateUtterance.lang = "ja"
+@mark.parametrize("lang, text", [
+    ("ja", "テレビを消して"),
+    ("en", "turn off tv"),
+    ("es", "Apaga la luz")
+])
+@mark.usefixtures("annotate_utterance")
+def test_detect_lang_set_lang(lang, text):
+    AnnotateUtterance.lang = lang
 
-    expected = "ja"
-    actual = AnnotateUtterance.detect_lang("次")
-
-    assert actual == expected
-
-
-def test_detect_lang_en():
-    expected = "en"
-    actual = AnnotateUtterance.detect_lang("go to next song")
-
-    assert actual == expected
-
-
-def test_detect_lang_en_set_lang():
-    AnnotateUtterance.lang = "en"
-
-    expected = "en"
-    actual = AnnotateUtterance.detect_lang("next")
+    expected = lang
+    actual = AnnotateUtterance.detect_lang(text=text)
 
     assert actual == expected
 
@@ -51,33 +46,54 @@ def test_get_instance():
     assert actual == expected
 
 
-def test_annotate_en_no_set_lang():
-    annotate_uttr = AnnotateUtterance.get_instance()
+@mark.parametrize("lang, text", [
+    ("en", "hello")
+])
+def test_annotate_unsupported_text(lang, text):
+    annotate_uttr = AnnotateUtterance.get_instance(lang=lang)
 
     with raises(LanguageNotSupportedError):
-        annotate_uttr.annotate("Hello", {})
+        annotate_uttr.annotate(text, {})
 
 
-def test_annotate_en_set_lang():
-    annotate_uttr = AnnotateUtterance.get_instance(lang="en")
-
-    with raises(LanguageNotSupportedError):
-        annotate_uttr.annotate("Hello", {})
-
-
-def test_annotate_ja():
-    annotate_uttr = AnnotateJapaneseUtterance()
-
-    expected = ("{テレビ|DeviceType}を{消して|ActionTrigger}", ["DeviceType","ActionTrigger"])
-    actual = annotate_uttr.execute("テレビを消して", {"ActionTrigger": "消して", "DeviceType": "テレビ", "Appliance": "テレビ"})
+@mark.parametrize("actual_args, expected", [
+    (
+        # Utterance with labelled tokens.
+        {"uttr": "テレビ消して", "slot_values": {"ActionTrigger": "消して", "DeviceType": "テレビ", "Appliance": "テレビ"}},
+        ("{テレビ|DeviceType}{消して|ActionTrigger}", ["DeviceType", "ActionTrigger"])
+    ),
+    (
+        # Utterance with non labelled token. Note: "を" should not be labelled.
+        {"uttr": "テレビを消して", "slot_values": {"ActionTrigger": "消して", "DeviceType": "テレビ", "Appliance": "テレビ"}},
+        ("{テレビ|DeviceType}を{消して|ActionTrigger}", ["DeviceType","ActionTrigger"]),
+    ),
+    (
+        # Utterance with non labelled tokens only.
+        {"uttr": "止め て", "slot_values": {}},
+        ("止めて", [])
+    ),
+    (
+        # Utterance consists of only one character.
+        {"uttr": "次", "slot_values": {}},
+        ("次", [])
+    )
+])
+def test_annotate_ja(actual_args, expected):
+    instance = AnnotateJapaneseUtterance()
+    actual = instance.execute(**actual_args)
 
     assert actual == expected
 
 
-def test_annotate_es():
-    annotate_uttr = AnnotateSpanishUtterance()
-
-    expected = ("Apaga|ActionTrigger la luz|DeviceType", ['ActionTrigger', 'DeviceType'])
-    actual = annotate_uttr.execute("Apaga la luz", {"ActionTrigger": "Apaga", "DeviceType": "luz", "Appliance": "luz"})
+@mark.parametrize("actual_args, expected", [
+    (
+        # Utterance with labelled tokens only
+        {"uttr": "Apaga la luz", "slot_values": {"ActionTrigger": "Apaga", "DeviceType": "luz", "Appliance": "luz"}},
+        ("Apaga|ActionTrigger la luz|DeviceType", ['ActionTrigger', 'DeviceType'])
+    )
+])
+def test_annotate_es(actual_args, expected):
+    instance = AnnotateSpanishUtterance()
+    actual = instance.execute(**actual_args)
 
     assert actual == expected
