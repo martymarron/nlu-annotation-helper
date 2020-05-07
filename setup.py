@@ -8,7 +8,8 @@ setup(
     install_requires=["langdetect"],
     extras_require={
         "dev": [
-            "pytest"
+            "pytest",
+            "pytest_mock"
         ]
     },
     entry_points="""\
