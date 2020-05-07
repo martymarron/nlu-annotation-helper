@@ -19,14 +19,6 @@ logger.addHandler(stream_handler)
 
 
 def load_uttr_json(path, lang) -> list:
-    """
-    This function load a file written in BINF and build a list of interpretation instances.
-
-    :param path: A path to a file.
-    :param lang: A language of texts of given file.
-    :return: A list of interpretation instances.
-    :rtype: list
-    """
 
     interp_list = []
     try:
@@ -61,16 +53,6 @@ def load_uttr_json(path, lang) -> list:
 
 
 def save_blugoldens(interp_list: list):
-    """
-    This function extract an interpretation object, and save it to a file in BluGoldens format.
-
-    A file name and path is determined by BluGoldensWriterHelper object.
-    A new line for an interpretation object will be added when an intended file exists.
-    The intended file and its directory will be created when it does not exist.
-
-    :param interp_list: The list of interpretation instances to be extracted.
-    :return: None.
-    """
 
     for interp in interp_list:
         entry = BluGoldenWriterHelper.build_utterance_entry(interp)
