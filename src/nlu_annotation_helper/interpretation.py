@@ -6,7 +6,7 @@ from .annotate_utterance import AnnotateUtterance
 
 class Interpretation:
     """
-    Interpretation class describes an interpretation object of BINF.
+    Interpretation class describes an interpretation object of NIF.
 
     Attributes:
         domain(str): Domain name.
