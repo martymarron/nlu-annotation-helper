@@ -20,7 +20,7 @@ logger.addHandler(stream_handler)
 
 def load_uttr_json(path, lang) -> list:
     """
-    This function load a file written in BINF and build a list of interpretation instances.
+    This function load a file written in NIF and build a list of interpretation instances.
 
     :param path: A path to a file.
     :param lang: A language of texts of given file.
