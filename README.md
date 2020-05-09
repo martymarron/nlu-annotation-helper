@@ -1,10 +1,10 @@
 NLU Annotation Helper
 ====
-## Overview
-Manual annotation work is time consuming. NLU annotation helper reduces manual work in annotation.
 
 ## Description
-This is a command line tool to partially automate annotation.
+Manual annotation work is time consuming. **NLU annotation helper** reduces manual work in annotation.
+
+**NLU annotation helper** is a command line tool to partially automate annotation.
 Here is the basic steps to annotate an example utterance.
 
 Example utterance(Japanese): テレビを消して (Turn off tv.)
@@ -13,42 +13,66 @@ Example utterance(Japanese): テレビを消して (Turn off tv.)
 2. Decide domain and intent.
     - Domain: HomeAutomation
     - Intent: TurnOffApplianceIntent
-3. Fill slots.
-    - Slots:
+3. Label tokens with slot names.
+    - Labelled tokens:
         - テレビ|DeviceType
         - 消して|ActionTrigger
 
-[NLUConsole](https://nluconsole-prod-pdx.pdx.proxy.amazon.com/) helps to retrieve these results, and provides results in [NIF format](https://wiki.labcollab.net/confluence/display/Doppler/NIF+-+NLU+Interpretation+Format).
+[NLUConsole](https://nluconsole-prod-pdx.pdx.proxy.amazon.com/) tokenize and label given utterances in [NIF format](https://wiki.labcollab.net/confluence/display/Doppler/NIF+-+NLU+Interpretation+Format).
 
 NLU annotation helper converts NIF format to BluGoldens format.
 
-So that example utterance can be tested in [dory Testing](https://wiki.labcollab.net/confluence/display/Doppler/Setting+up+Testing+in+Dory#SettingupTestinginDory-type:DATA_GOLDENS).
+## Table of Contents
+1. [Installation](#installation)
+2. [Usage](#installation)
+3. [Contributing](#contributing)
+4. [Credits](#credits)
+5. [Licencing](#licencing)
+3. [Change Log](#change-log)
 
-## Requirement
+## Installation
+**Requirements:**
 - OS Platform: Mac OSX
 - Python version: 3.0+
 
-## Install
 ```
-# Mac OSX
-$ tar xvzf nlu-annotation-helper-1.0.0.tar.gz
+$ tar xvzf nlu-annotation-helper-x.y.z.tar.gz
 $ cd nlu-annotation-helper
 $ pip install .
 ```
 
 ## Usage
 ```
-# nlu-annotation-helper <json_path>
+# nlu-annotation-helper --json <path_to_json> (--lang <lang_code>)
 ```
 - input:
-    - json_path: Required. Provide a path to json file which is [NLUConsole - Bulk Processing](https://nluconsole-prod-pdx.pdx.proxy.amazon.com/ui/bulkProcessing)
+    - --json: Required. Provide a path to json file which [NLUConsole - Bulk Processing](https://nluconsole-prod-pdx.pdx.proxy.amazon.com/ui/bulkProcessing) generates.
+    - --lang: Optional. Provide a language code. e.g. ja, es, ...etc.
+              This tool will process a json file by a given language. 
+              This tool will automatically detect the language if this argument is not provided. 
 - output: 
-    - qa_test/: Create BluGoldens files under this directory. For details regarding qa_test directory structure, refer [qa_test](https://code.amazon.com/packages/BluGoldens/trees/mainline/--/Alexa/ja/ja-JP/test/qa_test) directory in BluGoldens package.
+    - fud/: Generate BluGoldens files under this directory. For details regarding fud directory structure, refer [fud](https://code.amazon.com/packages/BluGoldens/trees/mainline/--/Alexa/ja/ja-JP/test/fud) directory in BluGoldens package.
 
-## Limitation
-- Supported language for annotation: Japanese 
+**Supported language:** \* As of v1.1.1. 
+  - Japanese
+  - Spanish 
+  
+## Contributing
+See CONTRIBUTING.md.
 
-## Author
-[Masashi Kurita](maskurit@amazon.co.jp) (QAE, [Alexa International Quality](https://wiki.labcollab.net/confluence/display/AIQ/Alexa+International+Quality+%28AIQ%29+Home))
+## Credits
+- [Masashi Kurita](maskurit@amazon.co.jp) (QAE, [Alexa International Quality](https://wiki.labcollab.net/confluence/display/AIQ/Alexa+International+Quality+%28AIQ%29+Home) JP)
 
+## Licencing
+For Amazon internal use only.
 
+All rights served. 
+
+## Change Log
+
+- v1.0.0:
+    - Initial release.
+- v1.1.0:
+    - Support Spanish. 
+
+*EOD*
