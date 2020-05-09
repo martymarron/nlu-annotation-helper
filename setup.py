@@ -3,6 +3,12 @@ from setuptools import setup, find_packages
 setup(
     name='nlu-annotation-helper',
     version='1.0.0',
+    description="""
+    NLU annotation helper is a command line tool to partially automate annotation.
+    """,
+    platforms="OS Platform: Mac OSX, Python version: 3.0+",
+    license="For Amazon internal use only. All rights served. ",
+    url="https://wiki.labcollab.net/confluence/display/AIQ/Alexa+International+Quality+%28AIQ%29+Home",
     packages=find_packages(where="src", exclude=("tests",)),
     package_dir={"": "src"},
     install_requires=["langdetect"],
