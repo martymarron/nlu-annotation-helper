@@ -1,4 +1,4 @@
-include tox.ini
+include tox.ini, CONTRIBUTING.md
 
 graft tests
 graft src
