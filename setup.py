@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='nlu-annotation-helper',
-    version='1.0.0',
+    version='1.1.0',
     description="""
     NLU annotation helper is a command line tool to partially automate annotation.
     """,
